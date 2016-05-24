@@ -20,10 +20,6 @@ object annotations {
     }
   }
 
-  /**
-   * Annotation is used on case class
-   * Reader and/or Writer will be added into companion object of this case class
-   */
   def withClassDecl(c: whitebox.Context) = {
     import c.universe._
 
@@ -40,8 +36,4 @@ object annotations {
     (cDecl: ClassDef, compDecl: Option[ModuleDef], className: TypeName, fields: Seq[ValDef]) =>
       ???
   }
-
-
-
-
 }
