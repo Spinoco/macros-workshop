@@ -2,7 +2,7 @@ package com.spinoco.logger
 
 /**
   * Describes position in file
-  * @param source full path of a file
+  * @param path full path of a file
   * @param row
   * @param column
   */
