@@ -14,7 +14,6 @@ object Build extends Build  {
     , scalacOptions += "-feature"
     , scalacOptions ++= Seq("-Ypatmat-exhaust-depth", "off")
     , resolvers += Resolver.sonatypeRepo("releases")
-    , addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
   )
 
   val macroSettings = Seq(
@@ -29,10 +28,12 @@ object Build extends Build  {
     , settings = commonSettings ++ macroSettings
   )
 
-  lazy val serializerMacro = Project(
-    id = "serializerMacro"
-    , base = file("./serializerMacro")
-    , settings = commonSettings ++ macroSettings
+  lazy val prettyprintMacro = Project(
+    id = "prettyprintMacro"
+    , base = file("./prettyprintMacro")
+    , settings = commonSettings ++ macroSettings ++ Seq(
+      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+    )
   )
 
   lazy val loggerDemo = Project(
@@ -42,5 +43,12 @@ object Build extends Build  {
   ).dependsOn(loggerMacro)
 
 
+  lazy val prettyprintDemo = Project(
+    id = "prettyprintDemo"
+    , base = file("./prettyprintDemo")
+    , settings = commonSettings ++ Seq(
+      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+    )
+  ).dependsOn(prettyprintMacro)
 
 }
