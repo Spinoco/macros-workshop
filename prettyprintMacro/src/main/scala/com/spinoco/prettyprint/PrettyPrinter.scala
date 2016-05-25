@@ -15,11 +15,13 @@ trait PrettyPrinter[A] {
 object PrettyPrinter {
   def asString[A](implicit classTag: ClassTag[A]): PrettyPrinter[A] = new PrettyPrinter[A] {
     override def print(a: A, offset: Int): String = {
-      val spaceBefore = " "*offset
-      s"$spaceBefore- ${a.toString}: ${classTag.toString()}"
+      s" ${a.toString}: ${classTag.toString()}"
     }
   }
 
   implicit val intPrinter = asString[Int]
+  implicit val longPrinter = asString[Long]
+  implicit val stringPrinter = asString[String]
+  implicit val doublePrinter = asString[Double]
 
 }

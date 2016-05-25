@@ -20,6 +20,10 @@ object annotations {
     }
   }
 
+  /**
+   * Annotation is used on case class
+   * Reader and/or Writer will be added into companion object of this case class
+   */
   def withClassDecl(c: whitebox.Context) = {
     import c.universe._
 
@@ -34,6 +38,36 @@ object annotations {
   def caseClass(c: whitebox.Context) = {
     import c.universe._
     (cDecl: ClassDef, compDecl: Option[ModuleDef], className: TypeName, fields: Seq[ValDef]) =>
-      ???
+      val printer = q""" implicit val prettyPrinter: com.spinoco.prettyprint.PrettyPrinter[$className] = ${pm.caseClassPrinter(c)(className, fields)}"""
+
+      val expr = compDecl.fold {
+        q"""
+          $cDecl
+
+          object ${className.toTermName} {
+            $printer
+          }
+        """
+      } { comp =>
+        val q"object $obj extends ..$bases { ..$body }" = comp
+
+        q"""
+          $cDecl
+
+          object $obj extends ..$bases {
+            ..$body
+
+            $printer
+          }
+        """
+      }
+      val result = c.Expr(expr)
+      println(result)
+      result
+
   }
+
+
+
+
 }
